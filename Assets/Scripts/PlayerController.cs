@@ -11,9 +11,17 @@ public class PlayerController : MonoBehaviour
     [Range(1f,10f)]
     public float TouchSens = 1f;
 
-
     [SerializeField]
     Transform bar;
+
+    Animator animator;
+
+    private void Start()
+    {
+        animator = GetComponentInChildren<Animator>();
+        animator.SetBool("IsGrounded", true);
+        animator.SetBool("OnRail", false);
+    }
     private void FixedUpdate()
     {
         transform.position += speed * transform.forward * Time.deltaTime;
@@ -51,7 +59,29 @@ public class PlayerController : MonoBehaviour
 #endif
         
     }
+    private void OnCollisionEnter(Collision collision)
+    {
+        if (collision.collider.CompareTag("Ground"))
+        {
+            animator.SetBool("IsGrounded", true);
+        }
+        if (collision.collider.CompareTag("Rail"))
+        {
+            animator.SetBool("OnRail", true);
+        }
 
+    }
+    private void OnCollisionExit(Collision collision)
+    {
+        if(collision.collider.CompareTag("Ground"))
+        {
+            animator.SetBool("IsGrounded", false);
+        }
+        if(collision.collider.CompareTag("Rail"))
+        {
+            animator.SetBool("OnRail", false);
+        }
+    }
     private void OnTriggerEnter(Collider other)
     {
         if(other.CompareTag("Adder"))
@@ -62,6 +92,17 @@ public class PlayerController : MonoBehaviour
         if(other.CompareTag("FallTrigger"))
         {
             Debug.Log("Player Fall");
+            GameManager.instance.resetLevel();
+        }
+        if(other.CompareTag("Gem"))
+        {
+            Debug.Log("GemCollected");
+            other.gameObject.SetActive(false);
+            GameManager.instance.GemCollected();
+        }
+        if (other.CompareTag("FireTile"))
+        {
+            bar.localScale -= new Vector3(0, 0.5f, 0);
         }
     }
 }

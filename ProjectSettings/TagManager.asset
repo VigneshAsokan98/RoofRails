@@ -6,6 +6,10 @@ TagManager:
   tags:
   - Adder
   - FallTrigger
+  - Gem
+  - FireTile
+  - Ground
+  - Rail
   layers:
   - Default
   - TransparentFX
