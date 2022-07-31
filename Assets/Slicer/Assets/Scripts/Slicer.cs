@@ -40,8 +40,8 @@ namespace Assets.Scripts
             positiveObject.GetComponent<MeshFilter>().mesh = positiveSideMeshData;
             negativeObject.GetComponent<MeshFilter>().mesh = negativeSideMeshData;
 
-            SetupCollidersAndRigidBodys(ref positiveObject, positiveSideMeshData, sliceable.UseGravity);
-            SetupCollidersAndRigidBodys(ref negativeObject, negativeSideMeshData, sliceable.UseGravity);
+            //SetupCollidersAndRigidBodys(ref positiveObject, sliceable.UseGravity);
+            //SetupCollidersAndRigidBodys(ref negativeObject, sliceable.UseGravity);
 
             return new GameObject[] { positiveObject, negativeObject};
         }        
@@ -77,16 +77,11 @@ namespace Assets.Scripts
             return meshGameObject;
         }
 
-        /// <summary>
-        /// Add mesh collider and rigid body to game object
-        /// </summary>
-        /// <param name="gameObject"></param>
-        /// <param name="mesh"></param>
-        private static void SetupCollidersAndRigidBodys(ref GameObject gameObject, Mesh mesh, bool useGravity)
+
+        /// Add collider and rigid body to game object
+        private static void SetupCollidersAndRigidBodys(ref GameObject gameObject, bool useGravity)
         {                     
-            MeshCollider meshCollider = gameObject.AddComponent<MeshCollider>();
-            meshCollider.sharedMesh = mesh;
-            meshCollider.convex = true;
+            BoxCollider Collider = gameObject.AddComponent<BoxCollider>();
 
             var rb = gameObject.AddComponent<Rigidbody>();
             rb.useGravity = useGravity;

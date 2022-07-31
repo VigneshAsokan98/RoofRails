@@ -4,7 +4,7 @@ using UnityEngine;
 
 public class PlayerController : MonoBehaviour
 {
-    float speed = 15f;
+    float speed = 12f;
 
     Vector2 PrevTouchPostion;
     float SlideMagnitude;
@@ -16,6 +16,15 @@ public class PlayerController : MonoBehaviour
 
     Animator animator;
 
+    [SerializeField]
+    Transform[] BarTips;
+
+    public static PlayerController instance;
+
+    private void Awake()
+    {
+        instance = this;
+    }
     private void Start()
     {
         animator = GetComponentInChildren<Animator>();
@@ -103,6 +112,18 @@ public class PlayerController : MonoBehaviour
         if (other.CompareTag("FireTile"))
         {
             bar.localScale -= new Vector3(0, 0.5f, 0);
+        }
+        if (other.CompareTag("Saw"))
+        {
+            float BarSize = Vector3.Distance(BarTips[0].position, BarTips[1].position);
+            float fraction = Vector3.Distance(BarTips[0].position, other.GetComponentInChildren<Transform>().position);
+            float cutRatio = fraction / BarSize;
+            bar.localScale = new Vector3(bar.localScale.x, bar.localScale.y * cutRatio, bar.localScale.z);
+        }
+
+        if (other.CompareTag("Bullet"))
+        {
+            GameManager.instance.resetLevel();
         }
     }
 }

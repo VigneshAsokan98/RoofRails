@@ -23,6 +23,6 @@ public class GameManager : MonoBehaviour
         int Gems = PlayerPrefs.GetInt("Gems", 0);
         Gems++;
         GemCount.text = Gems.ToString();
-        PlayerPrefs.SetInt("Gems", 0);
+        PlayerPrefs.SetInt("Gems", Gems);
     }
 }
