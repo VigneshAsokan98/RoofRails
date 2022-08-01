@@ -1,3 +1,4 @@
+using System;
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
@@ -21,24 +22,50 @@ public class PlayerController : MonoBehaviour
 
     public static PlayerController instance;
 
+    bool isGrounded = true;
+    public bool startGame = false;
+    public bool isgameOver = false;
+
+    public float force= 10000f;
     private void Awake()
     {
         instance = this;
     }
     private void Start()
     {
+        transform.position = new Vector3(0, -2f, 10);
         animator = GetComponentInChildren<Animator>();
-        animator.SetBool("IsGrounded", true);
+        animator.SetBool("IsGrounded", isGrounded);
         animator.SetBool("OnRail", false);
     }
-    private void FixedUpdate()
+    public void FixedUpdate()
     {
+        if (!startGame || isgameOver)
+            return;
         transform.position += speed * transform.forward * Time.deltaTime;
         Camera.main.transform.position = new Vector3(Camera.main.transform.position.x, transform.position.y + 12.5f, transform.position.z - 13f);
+        if (isGrounded)
+        {
+            GetComponent<Rigidbody>().constraints = RigidbodyConstraints.FreezeRotation;
+        }
+        else
+        {
+            GetComponent<Rigidbody>().constraints = RigidbodyConstraints.FreezeRotationY | RigidbodyConstraints.FreezeRotationX;
+        }
+    }
+
+    internal void ResetPlayer()
+    {
+        transform.position = new Vector3(0, -2f, 10);
+        transform.rotation = Quaternion.Euler(Vector3.zero);
+        GetComponent<Rigidbody>().constraints = RigidbodyConstraints.FreezeRotation;
+        bar.localScale = new Vector3(0.4f, 3f, 0.4f);
     }
 
     private void Update()
     {
+        if (!startGame || isgameOver)
+            return;
 #if UNITY_EDITOR
         float x = Input.GetAxis("Horizontal");
         Vector3 _pos = transform.position;
@@ -63,8 +90,7 @@ public class PlayerController : MonoBehaviour
         pos.x = Mathf.Clamp(pos.x, -5.8f, 5.8f);
         transform.position = pos;
         PrevTouchPostion = touch.position;
-        Debug.Log("Android");
-        
+        Debug.Log("Android");        
 #endif
         
     }
@@ -72,11 +98,23 @@ public class PlayerController : MonoBehaviour
     {
         if (collision.collider.CompareTag("Ground"))
         {
-            animator.SetBool("IsGrounded", true);
+            isGrounded = true;
+            animator.SetBool("IsGrounded", isGrounded);
+            Debug.Log("Player hit Ground");
         }
+
         if (collision.collider.CompareTag("Rail"))
         {
             animator.SetBool("OnRail", true);
+        }
+        if (collision.collider.CompareTag("FinishLine"))
+        {
+            Debug.Log("Collider ::" + collision.gameObject.name);
+            float distance = Vector3.Distance(transform.position, collision.transform.position);
+            int multiplier = (int)distance / 6;
+            if(multiplier == 0)
+                multiplier = 1;
+            GameManager.instance.LevelComplete(multiplier);
         }
 
     }
@@ -84,7 +122,8 @@ public class PlayerController : MonoBehaviour
     {
         if(collision.collider.CompareTag("Ground"))
         {
-            animator.SetBool("IsGrounded", false);
+            isGrounded = false;
+            animator.SetBool("IsGrounded", isGrounded);
         }
         if(collision.collider.CompareTag("Rail"))
         {
@@ -96,34 +135,42 @@ public class PlayerController : MonoBehaviour
         if(other.CompareTag("Adder"))
         {
             bar.localScale += new Vector3(0, 1, 0);
-            other.gameObject.SetActive(false);
+            Destroy(other.gameObject);
         }
         if(other.CompareTag("FallTrigger"))
         {
             Debug.Log("Player Fall");
-            GameManager.instance.resetLevel();
+            GameManager.instance.GameOver();
         }
-        if(other.CompareTag("Gem"))
+        if (other.CompareTag("Trampoline"))
         {
-            Debug.Log("GemCollected");
-            other.gameObject.SetActive(false);
+            Debug.Log("Player Trampoline");
+            GetComponent<Rigidbody>().AddForce((transform.forward + transform.up) * force);
+            Destroy(other.gameObject);
+        }
+        if (other.CompareTag("Gem"))
+        {
             GameManager.instance.GemCollected();
+            Destroy(other.gameObject);
         }
         if (other.CompareTag("FireTile"))
         {
             bar.localScale -= new Vector3(0, 0.5f, 0);
+            if (bar.localScale.y <= 0)
+                GameManager.instance.GameOver();
         }
         if (other.CompareTag("Saw"))
         {
+            Debug.Log("SawHIt");
             float BarSize = Vector3.Distance(BarTips[0].position, BarTips[1].position);
-            float fraction = Vector3.Distance(BarTips[0].position, other.GetComponentInChildren<Transform>().position);
-            float cutRatio = fraction / BarSize;
+            float fraction = Vector3.Distance(transform.position, other.GetComponentInChildren<Transform>().position);
+            float cutRatio = 1 - (fraction / BarSize);
             bar.localScale = new Vector3(bar.localScale.x, bar.localScale.y * cutRatio, bar.localScale.z);
         }
 
         if (other.CompareTag("Bullet"))
         {
-            GameManager.instance.resetLevel();
+            GameManager.instance.GameOver();
         }
     }
 }

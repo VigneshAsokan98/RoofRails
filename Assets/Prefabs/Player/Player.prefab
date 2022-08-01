@@ -71,6 +71,8 @@ GameObject:
   - component: {fileID: 3182145481044795454}
   - component: {fileID: 3182145481044795451}
   - component: {fileID: 3182145481044795448}
+  - component: {fileID: 4427088694584571292}
+  - component: {fileID: 3562565722834773562}
   m_Layer: 0
   m_Name: Bar
   m_TagString: Untagged
@@ -143,6 +145,36 @@ MeshRenderer:
   m_SortingLayer: 0
   m_SortingOrder: 0
   m_AdditionalVertexStreams: {fileID: 0}
+--- !u!114 &4427088694584571292
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 3182145481044795455}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: c74b9b79e7d79c048a3f5f2f0e37119d, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  _isSolid: 1
+  _reverseWindTriangles: 0
+  _useGravity: 0
+  _shareVertices: 0
+  _smoothVertices: 0
+--- !u!65 &3562565722834773562
+BoxCollider:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 3182145481044795455}
+  m_Material: {fileID: 0}
+  m_IsTrigger: 0
+  m_Enabled: 1
+  serializedVersion: 2
+  m_Size: {x: 1.0000004, y: 2.0000002, z: 1.0000002}
+  m_Center: {x: 0.00000005960466, y: -1.0587912e-22, z: -0.00000008940697}
 --- !u!1 &3182145482266536591
 GameObject:
   m_ObjectHideFlags: 0
@@ -192,7 +224,7 @@ Rigidbody:
   m_UseGravity: 1
   m_IsKinematic: 0
   m_Interpolate: 0
-  m_Constraints: 0
+  m_Constraints: 48
   m_CollisionDetection: 0
 --- !u!114 &3182145482266536587
 MonoBehaviour:
@@ -211,6 +243,8 @@ MonoBehaviour:
   BarTips:
   - {fileID: 981775633435790839}
   - {fileID: 7850478323301710148}
+  startGame: 0
+  isgameOver: 0
 --- !u!65 &6901402245067672248
 BoxCollider:
   m_ObjectHideFlags: 0

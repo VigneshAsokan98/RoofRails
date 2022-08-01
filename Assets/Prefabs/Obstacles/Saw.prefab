@@ -113,6 +113,14 @@ PrefabInstance:
       propertyPath: m_LocalEulerAnglesHint.z
       value: 0
       objectReference: {fileID: 0}
+    - target: {fileID: -2087202157970152444, guid: 96e8c12aaa12d5641b43bc9fa3d91f9e, type: 3}
+      propertyPath: m_Materials.Array.data[0]
+      value: 
+      objectReference: {fileID: 2100000, guid: dafa06bd89836784e8305c94294e0515, type: 2}
+    - target: {fileID: -2087202157970152444, guid: 96e8c12aaa12d5641b43bc9fa3d91f9e, type: 3}
+      propertyPath: m_Materials.Array.data[3]
+      value: 
+      objectReference: {fileID: 2100000, guid: 4c4b5e2d9d786f848bbdf900ac365113, type: 2}
     - target: {fileID: 919132149155446097, guid: 96e8c12aaa12d5641b43bc9fa3d91f9e, type: 3}
       propertyPath: m_Name
       value: knife_smooth

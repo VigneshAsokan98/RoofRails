@@ -12,6 +12,9 @@ TagManager:
   - Rail
   - Saw
   - Bullet
+  - FinishLine
+  - FinalLine
+  - Trampoline
   layers:
   - Default
   - TransparentFX

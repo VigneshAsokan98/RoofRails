@@ -27,15 +27,34 @@ public class LevelLoader : MonoBehaviour
     GameObject Rail;
     [SerializeField]
     GameObject FireTile;
+    [SerializeField]
+    GameObject FinishLine;
+    [SerializeField]
+    GameObject Trampoline;
 
+    GameObject LevelObjects = null;
     private void Awake()
     {
         Instance = this;
     }
     private void Start()
     {
+        InitLevel();
+    }
+
+    public void InitLevel()
+    {
+
+        PlayerController.instance.ResetPlayer();
+
+
+        if (LevelObjects != null)
+            Destroy(LevelObjects);
+
+        LevelObjects = new GameObject();
+        LevelObjects.name = "LevelElements";
         CurrentLevel = PlayerPrefs.GetInt("CurrentLevel", 0);
-        string text =  Levels[0].text;
+        string text = Levels[CurrentLevel].text;
         string[] lines = text.Split('\n');
 
         SpawnPosition = Vector3.zero;
@@ -64,23 +83,33 @@ public class LevelLoader : MonoBehaviour
             case '.':
                 return;
             case 'p':
-                Instantiate(Ground, SpawnPosition, Quaternion.identity);
+                SpawnPosition.y -= interval * 2;
+                Instantiate(Ground, SpawnPosition, Quaternion.identity, LevelObjects.transform);
                 break;
             case 'g':
-                Instantiate(Gems, SpawnPosition, Quaternion.identity);
+                Instantiate(Gems, SpawnPosition, Quaternion.identity, LevelObjects.transform);
                 break;
             case 'a':
-                Instantiate(Adder, SpawnPosition, Quaternion.identity);
+                Instantiate(Adder, SpawnPosition, Quaternion.identity, LevelObjects.transform);
                 break;
             case 'e':
-                Instantiate(Enemy, SpawnPosition, Quaternion.identity);
+                Instantiate(Enemy, SpawnPosition, Quaternion.identity, LevelObjects.transform);
                 break;
             case 's':
-                Instantiate(Saw, SpawnPosition, Quaternion.identity);
+                Instantiate(Saw, SpawnPosition, Quaternion.identity, LevelObjects.transform);
+                break;
+            case 'f':
+                Instantiate(FireTile, SpawnPosition, Quaternion.identity, LevelObjects.transform);
+                break;
+            case 'l':
+                Instantiate(FinishLine, SpawnPosition, Quaternion.identity, LevelObjects.transform);
+                break;
+            case 't':
+                Instantiate(Trampoline, SpawnPosition, Quaternion.identity, LevelObjects.transform);
                 break;
             case 'r':
                 SpawnPosition.y -= interval * 2;
-                Instantiate(Rail, SpawnPosition, Quaternion.identity);
+                Instantiate(Rail, SpawnPosition, Quaternion.identity, LevelObjects.transform);
                 break;
         }
     }
